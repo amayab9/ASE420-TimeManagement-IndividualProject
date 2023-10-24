@@ -3,6 +3,7 @@ time usage.
 
 
     - As a user, I want to type “record today 09:30 10:30 ‘studied Java’ :STUDY”(DATE FROM TO TASK TAG format) as an input to the application so I can make a database record and store it in the database.
+    - As a user, I want to be able to use the word "today" to record the today's date in the database.
 
 
 As a student, I want to record the date and add AM or PM to the time so that I can keep track of what time of day I 
