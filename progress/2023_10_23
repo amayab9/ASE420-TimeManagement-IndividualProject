@@ -1,0 +1,23 @@
+{"header" : {
+  "cloc_url"           : "github.com/AlDanial/cloc",
+  "cloc_version"       : "1.98",
+  "elapsed_seconds"    : 0.122566938400269,
+  "n_files"            : 7,
+  "n_lines"            : 108,
+  "files_per_second"   : 57.1116492862048,
+  "lines_per_second"   : 881.15116041573},
+"XML" :{
+  "nFiles": 6,
+  "blank": 0,
+  "comment": 0,
+  "code": 85},
+"Markdown" :{
+  "nFiles": 1,
+  "blank": 12,
+  "comment": 0,
+  "code": 11},
+"SUM": {
+  "blank": 12,
+  "comment": 0,
+  "code": 96,
+  "nFiles": 7} }
