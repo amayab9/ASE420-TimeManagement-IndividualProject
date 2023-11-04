@@ -1,0 +1,21 @@
+record today toTime fromTime task :tag
+record today toTime fromTime "task" :tag
+record yyyy/mm/dd toTime fromTime task :tag
+record yyyy/mm/dd toTime fromTime "task" :tag
+
+query all
+query today
+query yyyy/mm/dd
+query :tag
+query task
+
+Justification:
+programV2,
+requirement: ; “query ‘Java’ ” to get all the Java-related activities
+-the user should type one word bc he wants to pull all related activites, user shouldn't type unnecessary amount of info
+when querying.
+
+requirement: I can specify
+the date using the 2022/09/23 form and add AM or PM to the FROM or TO
+- the user should add AM or PM to the end of the time without a space because in a command line it is unnecessary
+to add the space between the time and the time of day

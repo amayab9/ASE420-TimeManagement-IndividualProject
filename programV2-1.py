@@ -1,11 +1,26 @@
-# refactored for method overloading
+#this version turned into a mess when looking for am and pm, so I dropped this file. V2-2 is the working one
+#
 import argparse
 from datetime import datetime
 import sqlite3
 
+welcome_prompt = """
+Welcome to the Time Management Application!
+
+To record time, use the following format:
+record DATE FROM_TIME TO_TIME TASK TAG
+
+To query your records, you have the following options:
+- query all
+- query today
+- query yyyy/mm/dd
+- query :TAG
+
+Please enter your command: (q to quit)
+"""
 
 class TimeManagementApp:
-    def __init__(self, db_name="timeManagement.db"):
+    def __init(self, db_name="timeManagement.db"):
         self.conn = sqlite3.connect(db_name)
         self.cursor = self.conn.cursor()
         self.setup_database()
@@ -24,10 +39,11 @@ class TimeManagementApp:
         self.conn.commit()
 
     def record_time(self, user_input_date, from_time, to_time, task, tag):
-        today = self.get_today_date(user_input_date)
-        from_time, to_time = self.parse_time(from_time, to_time)
+        today = datetime.now().strftime("%Y/%m/%d") if user_input_date.lower() == "today" else user_input_date
 
-        self.insert_record(today, from_time, to_time, task, tag)
+        self.cursor.execute("INSERT INTO time_records (date, from_time, to_time, task, tag) VALUES (?, ?, ?, ?, ?)",
+                            (today, from_time, to_time, task, tag))
+        self.conn.commit()
         print("Record submitted successfully")
 
     def query_records(self, query_request):
@@ -43,35 +59,6 @@ class TimeManagementApp:
             self.query_records_by_tag(tag)
         else:
             self.query_records_by_task(query_request)
-
-    def insert_record(self, today, from_time, to_time, task, tag):
-        self.cursor.execute("INSERT INTO time_records (date, from_time, to_time, task, tag) VALUES (?, ?, ?, ?, ?)",
-                            (today, from_time, to_time, task, tag))
-        self.conn.commit()
-
-    def get_today_date(self, user_input_date):
-        return datetime.now().strftime("%Y/%m/%d") if user_input_date.lower() == "today" else user_input_date
-
-    def parse_time(self, from_time, to_time):
-        from_hours, from_minutes, from_period = self.parse_time_parts(from_time)
-        to_hours, to_minutes, to_period = self.parse_time_parts(to_time)
-
-        from_hours = from_hours % 12 + (0 if from_period == "AM" else 12)
-        to_hours = to_hours % 12 + (0 if to_period == "AM" else 12)
-
-        from_time_formatted = f"{from_hours:02}:{from_minutes}"
-        to_time_formatted = f"{to_hours:02}:{to_minutes}"
-
-        return from_time_formatted, to_time_formatted
-
-    def parse_time_parts(self, time_str):
-        time_parts = time_str.split()
-        if len(time_parts) == 3:
-            hours, minutes, period = time_parts
-        else:
-            hours, minutes = time_parts
-            period = None
-        return int(hours), int(minutes), period
 
     def query_all_records(self):
         self.cursor.execute("SELECT * FROM time_records")
@@ -98,10 +85,9 @@ class TimeManagementApp:
             print("No records found")
 
     def run(self):
+        print(welcome_prompt)
         while True:
-            print("Enter record DATE FROM TO TASK TAG\n")
-            user_input = input()
-
+            user_input = input("Please enter your command: ")
             if user_input.lower() == 'q':
                 break
 
@@ -142,7 +128,6 @@ class TimeManagementApp:
 
         self.conn.close()
 
-
 def main():
     parser = argparse.ArgumentParser(description="Time Management Application")
     parser.add_argument("-r", "--record", nargs="+", help="Record time usage")
@@ -160,6 +145,7 @@ def main():
             from_time = input_values[2]
             to_time = input_values[3]
             task_tag_string = ' '.join(input_values[4:])
+
             task_parts = task_tag_string.split(':')
 
             if len(task_parts) > 1:
@@ -176,7 +162,6 @@ def main():
         app.query_records(query_request)
 
     app.run()
-
 
 if __name__ == "__main__":
     main()
