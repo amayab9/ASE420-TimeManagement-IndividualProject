@@ -23,6 +23,20 @@ For example:
 * `query 'Java'`: Retrieves all Java-related activites.
 * `query :STUDY`: Retrieves all avtivites with the tag ":STUDY"
 
+### Query Report
+You can query a report of your time usage from specified dates.
+For example:
+
+* `report yyyy/mm/dd today`: Retrieves all records from the specified date to today's date
+* `report yyyy/mm/dd yyyy/mm/dd`: Retreives all records from all dates between the specified dates (inclusive)
+
+### Priority
+You can query your most frequent activity.
+For example:
+
+* `priority`: 
+
+
 ### Database and Language
 This application is built with Python and SQLite as the standard package for the database.
 
