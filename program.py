@@ -1,97 +1,191 @@
+from collections import Counter
 from datetime import datetime
 import sqlite3
+import argparse
 
-conn = sqlite3.connect("timeManagement.db")
-cursor = conn.cursor()
+DATE_FORMAT = "%Y/%m/%d"
 
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS time_records (
-    id INTEGER PRIMARY KEY,
-    date DATE,
-    from_time TEXT,
-    to_time TEXT,
-    task TEXT,
-    tag TEXT
-    )
-''')
-conn.commit()
 
-while True:
-    print("Enter record DATE FROM TO TASK TAG\nOR\nquery query_search (q to quit)")
-    user_input = input()
+class TimeManagementTool:
+    def __init__(self, database_file="timeManagement.db"):
+        self.database_file = database_file
+        self.conn, self.cursor = self._open_database()
 
-    if user_input.lower() == 'q':
-        break
+    def _open_database(self):
+        conn = sqlite3.connect(self.database_file)
+        cursor = conn.cursor()
+        self._create_table(cursor)
+        return conn, cursor
 
-    input_values = user_input.split()
+    def _create_table(self, cursor):
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS time_records (
+            id INTEGER PRIMARY KEY,
+            date DATE,
+            from_time TEXT,
+            to_time TEXT,
+            task TEXT,
+            tag TEXT
+            )
+        ''')
 
-    today = None
+    def _close_database(self):
+        self.conn.close()
 
-    if len(input_values) >= 5:
+    def _record_time(self, date, from_time, to_time, task, tag):
+        self.cursor.execute("INSERT INTO time_records (date, from_time, to_time, task, tag) VALUES (?, ?, ?, ?, ?)",
+                            (date, from_time, to_time, task, tag))
+        self.conn.commit()
+
+    def query_records(self, query_request):
+        query_request = query_request.strip()
+
+        if query_request.lower() == "all":
+            self.query_all_records()
+        elif query_request.lower() == "today":
+            today = datetime.now().strftime(DATE_FORMAT)
+            self.query_records_by_date(today)
+        elif query_request.startswith(":"):
+            tag = query_request[1:].strip().lower()
+            self.query_records_by_tag(tag)
+        else:
+            if "/" in query_request:
+                self.query_records_by_date(query_request)
+            else:
+                self.query_records_by_task(query_request)
+
+    def query_all_records(self):
+        self.cursor.execute("SELECT * FROM time_records")
+        self.print_records(self.cursor.fetchall())
+
+    def query_records_by_date(self, date):
+        try:
+            datetime.strptime(date, DATE_FORMAT)
+        except ValueError:
+            print("Invalid date format")
+            return
+        self.cursor.execute("SELECT * FROM time_records WHERE date = ?", (date,))
+        self.print_records(self.cursor.fetchall())
+
+    def query_records_by_tag(self, tag):
+        tag = tag.strip().lower()
+        self.cursor.execute("SELECT * FROM time_records WHERE LOWER(tag) = ?", (tag,))
+        self.print_records(self.cursor.fetchall())
+
+    def query_records_by_task(self, task):
+        task = task.strip().strip("'")
+        self.cursor.execute("SELECT * FROM time_records WHERE task LIKE ?", ('%' + task + '%',))
+        self.print_records(self.cursor.fetchall())
+
+    def record(self, date, from_time, to_time, task, tag):
+        if date.lower() == "today":
+            date = datetime.now().strftime(DATE_FORMAT)
+        else:
+            try:
+                datetime.strptime(date, DATE_FORMAT)
+            except ValueError:
+                print("Invalid date format")
+                return
+        self._record_time(date, from_time, to_time, task, tag)
+        print("Record submitted successfully")
+
+    def print_records(self, records):
+        if records:
+            for record in records:
+                id, date, from_time, to_time, task, tag = record
+                print(f"ID: {id}, Date: {date}, From: {from_time}, To: {to_time}, Task: {task}, Tag: {tag}")
+        else:
+            print("No records found")
+
+    def report_generator(self, date_from, date_to):
+        if date_from.lower() == "today":
+            date_from = datetime.now().strftime(DATE_FORMAT)
+        if date_to.lower() == "today":
+            date_to = datetime.now().strftime(DATE_FORMAT)
+        try:
+            datetime.strptime(date_from, DATE_FORMAT)
+            datetime.strptime(date_to, DATE_FORMAT)
+        except ValueError:
+            print("Invalid date format")
+            return
+
+        self.cursor.execute("SELECT * FROM time_records WHERE date BETWEEN ? AND ?", (date_from, date_to))
+        self.print_records(self.cursor.fetchall())
+
+    def priority(self):
+        self.cursor.execute("SELECT task FROM time_records")
+        tasks = [record[0] for record in self.cursor.fetchall()]
+        task_counts = Counter(tasks)
+        most_frequent_task = task_counts.most_common(1)
+        if most_frequent_task:
+            most_frequent_task = most_frequent_task[0][0]
+            self.cursor.execute("SELECT * FROM time_records WHERE task = ?", (most_frequent_task,))
+            self.print_records(self.cursor.fetchall())
+        else:
+            print("No frequent activities")
+
+
+    def close(self):
+        self._close_database()
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Time Management Tool")
+    parser.add_argument("--database", default="timeManagement.db", help="Database file")
+    args = parser.parse_args()
+
+    tool = TimeManagementTool(database_file=args.database)
+
+    print("""
+Welcome to the Time Management Application!
+
+To record time, use the following format:
+- record DATE FROM_TIME TO_TIME 'TASK' :TAG
+
+To query your records, you have the following options:
+- query all
+- query today
+- query yyyy/mm/dd
+- query :TAG
+
+To print a record of activites, use the following format:
+- report yyyy/mm/dd yyyy/mm/dd
+
+Please enter your command: (q to quit)
+""")
+
+    while True:
+        user_input = input("Enter your command: ")
+
+        if user_input.lower() == 'q':
+            tool.close()
+            break
+
+        input_values = user_input.split()
         command = input_values[0]
-        if command.lower() == "record":
-            user_input_date = input_values[1]
-            user_input_from_time = input_values[2]
-            user_input_to_time = input_values[3]
 
-            task_tag_string = ' '.join(input_values[4:])
+        if command.lower() == "record" and len(input_values) >= 5:
+            date = input_values[1]
+            from_time = input_values[2]
+            to_time = input_values[3]
+            task = " ".join(input_values[4:])
+            tag = ""
 
-            task_parts = task_tag_string.split(':')
+            if ":" in task:
+                task, tag = task.split(":", 1)
+                task = task.strip()
+                tag = tag.strip()
 
-            if len(task_parts) > 1:
-                user_input_task = task_parts[0].strip()
-                user_input_tag = task_parts[1].strip()
-            else:
-                user_input_task = task_parts[0].strip()
-                user_input_tag = ""
-
-            if user_input_date.lower() == "today":
-                today = datetime.now().strftime("%Y/%m/%d")
-            else:
-                try:
-                    datetime.strptime(user_input_date, "%Y/%m/%d")
-                    today = user_input_date
-                except ValueError:
-                    print("Invalid date format")
-                    continue
-
-            if len(input_values) >= 5:
-                cursor.execute("INSERT INTO time_records (date, from_time, to_time, task, tag) VALUES (?, ?, ?, ?, ?)",
-                               (today, user_input_from_time, user_input_to_time, user_input_task, user_input_tag))
-                conn.commit()
-                print("Record submitted successfully")
-            else:
-                print("Invalid input format. You can provide a tag after the task.")
+            tool.record(date, from_time, to_time, task, tag)
+        elif command.lower() == "query" and len(input_values) == 2:
+            tool.query_records(input_values[1])
+        elif command.lower() == "report" and len(input_values) == 3:
+            tool.report_generator(input_values[1], input_values[2])
+        elif command.lower() == "priority":
+            tool.priority()
         else:
             print("Invalid command. Try again")
 
-    elif len(input_values) == 2:
-        command, query_request = input_values
 
-        if command.lower() == "query":
-            if query_request.lower() == "all":
-                cursor.execute("SELECT * FROM time_records")
-            elif query_request.lower() == "today":
-                today = datetime.now().strftime("%Y/%m/%d")
-                cursor.execute("SELECT * FROM time_records WHERE date = ?", (today,))
-            elif query_request.startswith(":"):
-                tag = query_request[1:]
-                cursor.execute("SELECT * FROM time_records WHERE LOWER(tag) = LOWER(?)", (tag,))
-            else:
-                cursor.execute("SELECT * FROM time_records WHERE task = ?", (query_request,))
-
-            results = cursor.fetchall()
-
-            if results:
-                for record in results:
-                    id, date, from_time, to_time, task, tag = record
-                    print(f"ID: {id}, Date: {date}, From: {from_time}, To: {to_time}, Task: {task}, Tag: {tag}")
-            else:
-                print("No records found.")
-        else:
-            print("Command not recognized")
-
-    else:
-        print("Invalid input format.")
-
-conn.close()
+if __name__ == "__main__":
+    main()

@@ -9,10 +9,15 @@ query yyyy/mm/dd
 query :tag
 query task
 
+report yyyy/mm/dd today
+report yyyy/mm/dd yyyy/mm/dd
+
+priority
+
 Justification:
 programV2,
 requirement: ; “query ‘Java’ ” to get all the Java-related activities
--the user should type one word bc he wants to pull all related activites, user shouldn't type unnecessary amount of info
+-the user should type one word bc he wants to pull all related activities, user shouldn't type unnecessary amount of info
 when querying.
 
 requirement: I can specify

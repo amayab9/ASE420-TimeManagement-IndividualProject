@@ -1,6 +1,8 @@
+# codesmell
 import argparse
 from datetime import datetime
 import sqlite3
+
 
 class TimeManagementApp:
     def __init__(self, db_name="timeManagement.db"):
@@ -123,6 +125,7 @@ class TimeManagementApp:
 
         self.conn.close()
 
+
 def main():
     parser = argparse.ArgumentParser(description="Time Management Application")
     parser.add_argument("-r", "--record", nargs="+", help="Record time usage")
@@ -156,6 +159,7 @@ def main():
         app.query_records(query_request)
 
     app.run()
+
 
 if __name__ == "__main__":
     main()

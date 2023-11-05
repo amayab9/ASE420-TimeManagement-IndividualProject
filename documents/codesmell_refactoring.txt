@@ -1,4 +1,14 @@
+prototype:
+- (1) when: 11/1/23
+- (2) code smell: excessive if/else | refactoring: extract methods/create classes
+- (3) where in the source: documents/design/ver1/prototype.py
+
 programV2:
-- (1) when: 11/3/23 Method overloading
+- (1) when: 11/3/23
 - (2) code smell: Method overloading | refactoring: SRP
-- (3) where in the source:
+- (3) where in the source: documents/design/ver1/programV2.py
+
+programV2
+- (1) when: 11/4/23
+- (2) code smell: global variable | use instance
+- (3) where in the source: documents/design/ver1/programV2.py
