@@ -4,8 +4,6 @@ from datetime import datetime
 import sqlite3
 import argparse
 
-DATE_FORMAT = "%Y/%m/%d"
-
 
 class Command(ABC):
     @abstractmethod
@@ -101,6 +99,8 @@ def print_records(records):
 
 
 class TimeManagementTool:
+    DATE_FORMAT = "%Y/%m/%d"
+
     def __init__(self, database):
         self.database = database
         self.conn = self.database.get_connection()
@@ -111,10 +111,10 @@ class TimeManagementTool:
 
     def record(self, date, from_time, to_time, task, tag):
         if date.lower() == "today":
-            date = datetime.now().strftime(DATE_FORMAT)
+            date = datetime.now().strftime(self.DATE_FORMAT)
         else:
             try:
-                datetime.strptime(date, DATE_FORMAT)
+                datetime.strptime(date, self.DATE_FORMAT)
             except ValueError:
                 print("Invalid date format")
                 return
@@ -130,7 +130,7 @@ class TimeManagementTool:
         if query_request.lower() == "all":
             self.query_all_records()
         elif query_request.lower() == "today":
-            today = datetime.now().strftime(DATE_FORMAT)
+            today = datetime.now().strftime(self.DATE_FORMAT)
             self.query_records_by_date(today)
         elif query_request.startswith(":"):
             tag = query_request[1:].strip().lower()
@@ -148,9 +148,9 @@ class TimeManagementTool:
 
     def query_records_by_date(self, date):
         if date.lower() == "today":
-            date = datetime.now().strftime(DATE_FORMAT)
+            date = datetime.now().strftime(self.DATE_FORMAT)
         try:
-            datetime.strptime(date, DATE_FORMAT)
+            datetime.strptime(date, self.DATE_FORMAT)
         except ValueError:
             print("Invalid date format")
             return
@@ -173,12 +173,12 @@ class TimeManagementTool:
 
     def report_generator(self, date_from, date_to):
         if date_from.lower() == "today":
-            date_from = datetime.now().strftime(DATE_FORMAT)
+            date_from = datetime.now().strftime(self.DATE_FORMAT)
         if date_to.lower() == "today":
-            date_to = datetime.now().strftime(DATE_FORMAT)
+            date_to = datetime.now().strftime(self.DATE_FORMAT)
         try:
-            datetime.strptime(date_from, DATE_FORMAT)
-            datetime.strptime(date_to, DATE_FORMAT)
+            datetime.strptime(date_from, self.DATE_FORMAT)
+            datetime.strptime(date_to, self.DATE_FORMAT)
         except ValueError:
             print("Invalid date format")
             return
