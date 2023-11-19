@@ -24,7 +24,10 @@ requirement: ; “query ‘Java’ ” to get all the Java-related activities
 -the user should type one word bc he wants to pull all related activities, user shouldn't type unnecessary amount of info
 when querying.
 
-requirement: I can specify
-the date using the 2022/09/23 form and add AM or PM to the FROM or TO
+requirement: I can specify the date using the 2022/09/23 form and add AM or PM to the FROM or TO
 - the user should add AM or PM to the end of the time without a space because in a command line it is unnecessary
 to add the space between the time and the time of day
+
+requirement: the priority command gives me the list of activities I spend most of my time on.
+- since we do not know how many activities the user will input in total, and instead of printing out all instances of the activity,
+'priority' prints out the top 10 most done activities with the count of how many each is done and the instances

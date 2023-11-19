@@ -10,8 +10,8 @@ DATE_FORMAT = "%Y/%m/%d"
 def print_records(records):
     if records:
         for record in records:
-            id, date, from_time, to_time, task, tag = record
-            print(f"ID: {id}, Date: {date}, From: {from_time}, To: {to_time}, Task: {task}, Tag: {tag}")
+            item_id, date, from_time, to_time, task, tag = record
+            print(f"ID: {item_id}, Date: {date}, From: {from_time}, To: {to_time}, Task: {task}, Tag: {tag}")
     else:
         print("No records found")
 

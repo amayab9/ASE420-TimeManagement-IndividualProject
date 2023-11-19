@@ -1,0 +1,5 @@
+FIX: priority should probably pull up a list of tasks in order from most done to least done
+UML VER 2 and 3
+Unit Testing
+ReadME - priority
+READ ME - fix time recording to follow format of other commands
