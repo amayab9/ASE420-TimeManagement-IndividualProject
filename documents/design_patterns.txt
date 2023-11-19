@@ -1,0 +1,15 @@
+Command Pattern:
+The command pattern is shown in the 'Command' abstract class and its concrete implementations ('RecordCommand',
+'QueryCommand', 'ReportCommand', 'PriorityCommand').
+
+Strategy Pattern:
+The 'process_command' method in 'TimeManagementTool' demonstrates the strategy pattern by delegating the
+execution of a command to its respective 'execute' method in the concrete command objects.
+
+Dependency Injection:
+By passing the 'database' object to the 'TimeManagementTool' constructor, it is evident dependency injection
+is being used.
+
+Singleton Pattern:
+The 'Database' class is a form of singleton as it manages the connection to the SQLite database. Only one
+instance of the 'Database' class is needed.

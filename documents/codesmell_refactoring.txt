@@ -1,14 +1,56 @@
-prototype:
-- (1) when: 11/1/23
-- (2) code smell: excessive if/else | refactoring: extract methods/create classes
-- (3) where in the source: documents/design/ver1/prototype.py
+1. prototype:
+    - (1) when: 11/1/23
+    - (2) code smell: Long and Nested conditions (if/else)
+    - (3) refactoring: extract methods/create classes
+    - (4) where in the source: documents/design/ver1/prototype.py
 
-programV2:
-- (1) when: 11/3/23
-- (2) code smell: Method overloading | refactoring: SRP
-- (3) where in the source: documents/design/ver1/programV2.py
+2. prototype:
+    - (1) when: 11/1/23
+    - (2) code smell: Magic numbers
+    - (3) refactoring: Create Constants
+    - (4) where in the source: documents/design/ver1/prototype.py
 
-programV2
-- (1) when: 11/4/23
-- (2) code smell: global variable | use instance
-- (3) where in the source: documents/design/ver1/programV2.py
+3. prototype:
+    - (1) when: 11/18/23
+    - (2) code smell: Repetitive code
+    - (3) refactoring: Create functions
+    - (4) where in the source: documents/design/ver1/prototype.py
+
+4. programV2:
+    - (1) when: 11/3/23
+    - (2) code smell: Method overloading
+    - (3) refactoring: SRP
+    - (4) where in the source: documents/design/ver1/final_programV2.py
+
+5. programV2
+    - (1) when: 11/4/23
+    - (2) code smell: global variable
+    - (3) refactoring: use instance
+    - (4) where in the source: documents/design/ver1/final_programV2.py
+
+6. programV2
+    - (1) when: 11/18/23
+    - (2) code smell: one large class
+    - (3) where in the source: documents/design/ver1/final_programV2.py
+
+7. programV2
+    - (1) when: 11/18/23
+    - (2) code smell: multiple classes but commands are alike (after refactoring for multiple classes)
+    - (3) refactoring: make abstract class
+    - (4) where in the source: documents/design/ver2/final_programV2.py
+
+8. programV2
+    - (1) when: 11/18/23
+    - (2) code smell: Hard Coded Date Format
+    - (4) where in the source: documents/design/ver2/final_programV2.py
+
+9. programV2
+    - (1) when: 11/18/23
+    - (2) code smell: global variable
+    - (3) refactoring: encapsulate in class
+    - (4) where in the source: documents/design/ver2/final_programV2.py
+
+10. programV2
+    - (1) when: 11/18/23
+    - (2) code smell: dead code
+    - (4) where in the source: documents/design/ver2/final_programV2.py

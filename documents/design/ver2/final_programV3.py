@@ -245,7 +245,7 @@ def main():
 
     To print a record of activities, use the following format:
     - report yyyy/mm/dd yyyy/mm/dd
-    
+
     To get a list of top 10 common activities, use command:
     - priority
 
