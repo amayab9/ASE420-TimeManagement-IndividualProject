@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import patch
 from io import StringIO
-from program import Database, TimeManagementTool, PriorityCommand
+from src.final_time_management_tool import Database, TimeManagementTool, PriorityCommand
 
 
 class TestTimeManagementTool(unittest.TestCase):
     def setUp(self):
-        self.database = Database(database_file="test.db")
+        self.database = Database(database_file="../test.db")
         self.tool = TimeManagementTool(self.database)
 
     def tearDown(self):
