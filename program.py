@@ -127,9 +127,7 @@ class TimeManagementTool:
     def query_records(self, query_request):
         query_request = query_request.strip()
 
-        if query_request.lower() == "all":
-            self.query_all_records()
-        elif query_request.lower() == "today":
+        if query_request.lower() == "today":
             today = datetime.now().strftime(self.DATE_FORMAT)
             self.query_records_by_date(today)
         elif query_request.startswith(":"):
@@ -233,7 +231,6 @@ def main():
     - record today FROM_TIME(AM/PM) TO_TIME(AM/PM) 'TASK' :TAG
 
     To query your records, you have the following options:
-    - query all
     - query today
     - query yyyy/mm/dd
     - query :TAG
