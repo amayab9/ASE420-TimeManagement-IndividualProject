@@ -141,11 +141,6 @@ class TimeManagementTool:
             else:
                 self.query_records_by_task(query_request)
 
-    def query_all_records(self):
-        query = "SELECT * FROM time_records"
-        records = self.database.execute_query(query)
-        print_records(records)
-
     def query_records_by_date(self, date):
         if date.lower() == "today":
             date = datetime.now().strftime(self.DATE_FORMAT)
