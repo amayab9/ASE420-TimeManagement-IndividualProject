@@ -6,7 +6,7 @@ from src.final_time_management_tool import Database, TimeManagementTool, Priorit
 
 class TestTimeManagementTool(unittest.TestCase):
     def setUp(self):
-        self.database = Database(database_file="../test.db")
+        self.database = Database(database_file="test.db")
         self.tool = TimeManagementTool(self.database)
 
     def tearDown(self):
