@@ -233,6 +233,7 @@ def main():
     To query your records, you have the following options:
     - query today
     - query yyyy/mm/dd
+    - query 'Task'
     - query :TAG
 
     To print a record of activities, use the following format:

@@ -1,2 +1,7 @@
 import os
-from src.final_time_management_tool import Database, TimeManagementTool, RecordCommand, QueryCommand, ReportCommand, PriorityCommand
+import sys
+PROJECT_PATH = os.getcwd()
+SOURCE_PATH = os.path.join(
+    PROJECT_PATH, "src"
+)
+sys.path.append(SOURCE_PATH)
