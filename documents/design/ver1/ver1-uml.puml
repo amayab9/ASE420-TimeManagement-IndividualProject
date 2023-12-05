@@ -1,0 +1,24 @@
+@startuml
+
+class TimeManagementTool {
+    -database_file: str
+    -conn: sqlite3.Connection
+    -cursor: sqlite3.Cursor
+    -DATE_FORMAT: str
+
+    +__init__(database_file: str = "timeManagement.db")
+    +_open_database(): (sqlite3.Connection, sqlite3.Cursor)
+    +_create_table(cursor: sqlite3.Cursor)
+    +_close_database()
+    +_record_time(date: str, from_time: str, to_time: str, task: str, tag: str)
+    +query_records(query_request: str)
+    +query_all_records()
+    +query_records_by_date(date: str)
+    +query_records_by_tag(tag: str)
+    +query_records_by_task(task: str)
+    +record(date: str, from_time: str, to_time: str, task: str, tag: str)
+    +print_records(records: List[Tuple])
+    +close()
+}
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+
+abstract class Command {
+    +execute(tool, input_values)
+}
+
+class RecordCommand {
+    +execute(tool, input_values)
+}
+
+class QueryCommand {
+    +execute(tool, input_values)
+}
+
+class ReportCommand {
+    +execute(tool, input_values)
+}
+
+class PriorityCommand {
+    +execute(tool, input_values)
+}
+
+class Database {
+    -database_file: str
+    -conn: sqlite3.Connection
+    -cursor: sqlite3.Cursor
+
+    +__init__(database_file: str)
+    +_open_database(): (sqlite3.Connection, sqlite3.Cursor)
+    +_create_table(cursor: sqlite3.Cursor)
+    +_close_database()
+    +execute_query(query: str, parameters: Optional[Tuple]) : List[Tuple]
+    +execute_insert(query: str, parameters: Tuple) : int
+    +get_connection() : sqlite3.Connection
+    +get_cursor() : sqlite3.Cursor
+    +close()
+}
+
+class TimeManagementTool {
+    -DATE_FORMAT: str
+    -database: Database
+    -conn: sqlite3.Connection
+    -cursor: sqlite3.Cursor
+
+    +__init__(database: Database)
+    +process_command(command: Command, command_input_values: List[str])
+    +record(date: str, from_time: str, to_time: str, task: str, tag: str)
+    +query_records(query_request: str)
+    +query_records_by_date(date: str)
+    +query_records_by_tag(tag: str)
+    +query_records_by_task(task: str)
+    +report_generator(date_from: str, date_to: str)
+    +priority()
+    +close()
+    +_record_time(date: str, from_time: str, to_time: str, task: str, tag: str)
+}
+
+Database --> TimeManagementTool: 1..1
+TimeManagementTool --> Command: uses
+RecordCommand --> Command: extends
+QueryCommand --> Command: extends
+ReportCommand --> Command: extends
+PriorityCommand --> Command: extends
+
+Database --* RecordCommand: 1..*
+Database --* QueryCommand: 1..*
+Database --* ReportCommand: 1..*
+Database --* PriorityCommand: 1..*
+
+Command <|-- RecordCommand
+Command <|-- QueryCommand
+Command <|-- ReportCommand
+Command <|-- PriorityCommand
+
+@enduml
